@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Karaoké Tamoul – Kan Irandil</title>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #e91e63;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 2rem;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .video {
+      flex: 1 1 400px;
+    }
+    .lyrics {
+      flex: 1 1 300px;
+      background: #222;
+      padding: 1rem;
+      border-radius: 10px;
+      height: 340px;
+      overflow-y: auto;
+    }
+    .line {
+      margin: 0.5rem 0;
+      transition: background 0.3s;
+      padding: 0.3rem;
+      border-radius: 4px;
+    }
+    .active {
+      background: #ff4081;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Karaoké Tamoul – Kan Irandil</h1>
+  </header>
+
+  <div class="container">
+    <div class="video">
+      <div id="player"></div>
+    </div>
+
+    <div class="lyrics" id="lyrics">
+      <div class="line" data-start="0">கண் இரண்டில் மொத்தி விழுந்தாய்</div>
+      <div class="line" data-start="5">என் கனவில் போக்கி கழிந்தாய்</div>
+      <div class="line" data-start="10">வான் நடையில் துள்ளி நடந்தாய்</div>
+      <div class="line" data-start="15">என் மனதில் வீடு கட்டினாய்</div>
+      <div class="line" data-start="20">வார்த்தை இல்லாமலே வார்த்தை சொல்லாமல் நீ</div>
+      <div class="line" data-start="26">கண்களில் நின்றாய் வண்ணங்களில் குளித்தாய்</div>
+    </div>
+  </div>
+
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '340',
+        width: '100%',
+        videoId: 'hcEcM9sGFe8',
+        events: {
+          onReady: startSync
+        }
+      });
+    }
+
+    function startSync() {
+      setInterval(() => {
+        const currentTime = player.getCurrentTime();
+        const lines = document.querySelectorAll('.line');
+        lines.forEach(line => {
+          const start = parseFloat(line.dataset.start);
+          const next = line.nextElementSibling ? parseFloat(line.nextElementSibling.dataset.start) : 9999;
+          if (currentTime >= start && currentTime < next) {
+            line.classList.add('active');
+            line.scrollIntoView({ behavior: "smooth", block: "center" });
+          } else {
+            line.classList.remove('active');
+          }
+        });
+      }, 500);
+    }
+
+    // Charger l'API YouTube
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
+</body>
+</html>
